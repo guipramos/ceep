@@ -1,0 +1,18 @@
+.lista-categorias {
+    display: flex;
+    align-items: center;
+    padding: 20px 35px 0;
+}
+
+.lista-categorias .lista-categorias_lista {
+    display: flex;
+    justify-content: space-evenly;
+    width: 100%;
+}
+
+.lista-categorias .lista-categorias_lista .lista-categorias_item {
+    color: #fff;
+    background-color: var(--secundaria);
+    padding: 5px;
+    border-radius: 10px;
+}
