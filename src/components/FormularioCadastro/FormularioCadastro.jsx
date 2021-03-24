@@ -1,69 +1,78 @@
-import React, { Component } from 'react'
+import React, { Component } from "react";
 import "./estilo.css";
-
 class FormularioCadastro extends Component {
+  constructor(props) {
+    super(props);
+    this.titulo = "";
+    this.texto = "";
+    this.categoria = "Sem Categoria";
+    this.state = {categorias:[]}
 
-    constructor(props){
-        super(props);
+    this._novasCategorias = this._novasCategorias.bind(this);
+  }
 
-        this.titulo = "";
-        this.texto = "";
-        this.categoria= "Sem categoria";
+  componentDidMount(){
+    this.props.categorias.inscrever( this._novasCategorias);
+    
+  }
 
-        this._handleMudarTitulo = this._handleMudarTitulo.bind(this)
-        this._handleMudancaTexto = this._handleMudancaTexto.bind(this)
-        this._criarNota = this._criarNota.bind(this)
-        this._handleMudancaCategoria = this._handleMudancaCategoria.bind(this)
-    }
+  componentWillUnmount(){
+    this.props.categorias.desinscrever( this._novasCategorias);
+  }
+  _novasCategorias(categorias){
+    this.setState({...this.state, categorias})
+  }
+  _handleMudancaCategoria(evento){
+    evento.stopPropagation();
+    this.categoria = evento.target.value;
+  }
+  _handleMudancaTitulo(evento) {
+    evento.stopPropagation();
+    this.titulo = evento.target.value;
+  }
 
-    _handleMudancaCategoria = (event) => {
-        this.categoria = event.target.value;
-    }
+  _handleMudancaTexto(evento) {
+    evento.stopPropagation();
+    this.texto = evento.target.value;
+  }
 
-    _handleMudarTitulo = (event) => {
-        this.titulo = event.target.value;
-    }
+  _criarNota(evento) {
+    evento.preventDefault();
+    evento.stopPropagation();
+    this.props.criarNota(this.titulo, this.texto, this.categoria);
+  }
 
-    _handleMudancaTexto = (event) => {
-        this.texto = event.target.value;
-    }
+  render() {
+    return (
+      <form className="form-cadastro" onSubmit={this._criarNota.bind(this)}>
+        <select
+          onChange={this._handleMudancaCategoria.bind(this)}
+          className="form-cadastro_input"
+        >
+          <option>Sem Categoria</option>
 
-    _criarNota = (event) => {
-        event.preventDefault();
-        this.props.criarNota(this.titulo, this.texto, this.categoria)
-    }
-
-
-    render(){
-        return (
-            <form className="form-cadastro "
-                onSubmit={this._criarNota}
-            >
-                <select 
-                    onChange={this._handleMudancaCategoria} 
-                    className="form-cadastro_input" 
-                >
-                    <option>Sem categoria</option>
-                    {this.props.categorias.map((categoria) => {
-                        return <option>{categoria}</option>
-                    })}
-                </select>
-                <input 
-                    type="text" 
-                    placeholder="Titulo" 
-                    className="form-cadastro_input"
-                    onChange={this._handleMudarTitulo}
-                />
-                <textarea 
-                    placeholder="Escreva sua nota..." 
-                    rows={15}
-                    className="form-cadastro_input"
-                    onChange={this._handleMudancaTexto}
-                />
-                <button className="form-cadastro_input form-cadastro_submit">Criar nota</button>
-            </form>
-        )
-    }
+          {this.state.categorias.map((categoria, index) => {
+            return <option key={index} >{categoria}</option>;
+          })}
+        </select>
+        <input
+          type="text"
+          placeholder="Título"
+          className="form-cadastro_input"
+          onChange={this._handleMudancaTitulo.bind(this)}
+        />
+        <textarea
+          rows={15}
+          placeholder="Escreva sua nota..."
+          className="form-cadastro_input"
+          onChange={this._handleMudancaTexto.bind(this)}
+        />
+        <button className="form-cadastro_input form-cadastro_submit">
+          Criar Nota
+        </button>
+      </form>
+    );
+  }
 }
 
-export default FormularioCadastro
+export default FormularioCadastro;
